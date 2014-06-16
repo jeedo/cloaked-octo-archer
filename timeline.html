@@ -10,8 +10,7 @@
 	 <!-- Optional theme -->
 	 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
-	 <!-- Latest compiled and minified JavaScript -->
-	 <!--<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+	 <script src="js/libs/nano.js"></script>
 
 	 <link href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.0.0/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
@@ -130,10 +129,10 @@
 
 		$.each(dataFromStore.events, function(index, value){
 			value.index = index;
-			//$("#datatable").append(nano("<div class='row'><div class='col-xs-2'><input id='title_{index}' type='text' class='form-control' placeholder='Title' value='{title}'/></div><div class='col-xs-2'><input id='description{index}' type='text' class='form-control' placeholder='Description' value='{description}'/></div><div id='start_{index}' class='input-group date form_datetime col-xs-2' data-date-format='DD/MM/YYYY HH:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div><div id='end_{index}' class='input-group date form_datetime col-xs-2' data-date-format='DD/MM/YYYY HH:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div></div>", value));			
-			//$('.form_datetime').datetimepicker();
-			//$('#start_'+index).data("DateTimePicker").setDate(value.start);
-			//$('#end_'+index).data("DateTimePicker").setDate(value.end);
+			$("#datatable").append(nano("<div class='row'><div class='col-xs-2'><input id='title_{index}' type='text' class='form-control' placeholder='Title' value='{title}'/></div><div class='col-xs-2'><input id='description{index}' type='text' class='form-control' placeholder='Description' value='{description}'/></div><div id='start_{index}' class='input-group date form_datetime col-xs-2' data-date-format='DD/MM/YYYY HH:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div><div id='end_{index}' class='input-group date form_datetime col-xs-2' data-date-format='DD/MM/YYYY HH:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div></div>", value));			
+			$('.form_datetime').datetimepicker();
+			$('#start_'+index).data("DateTimePicker").setDate(value.start);
+			$('#end_'+index).data("DateTimePicker").setDate(value.end);
 		});
 
 		$('#update').click(function(){
