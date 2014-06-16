@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+ <html>
+   <head>
+     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	 <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script><script src="http://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
+	 <script src="nano.js" type="text/javascript"></script>
+          <!-- Latest compiled and minified CSS -->
+	 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+	 <!-- Optional theme -->
+	 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+	 <!-- Latest compiled and minified JavaScript -->
+	 <!--<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+
+	 <link href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.0.0/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0-beta.1/css/jquery.dataTables.css">
+
+<script type="text/javascript" language="javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10-beta.1/js/jquery.dataTables.js"></script>
+	 <script type="text/javascript">
+	 var timeline_data = {
+	 	'events' : [
+	 		{
+	 			'start': new Date(2014, 6, 7),
+	 			'end': new Date(2014, 6, 9),
+	 			'title': 'Event 1',
+	 			'description': ''
+	 		},
+	 		{
+	 			'start': new Date(2014, 6, 10),
+	 			'end': new Date(2014, 6, 15),
+	 			'title': 'Event 2',
+	 			'description': ''	 			
+	 		}
+	 	]
+	 }
+
+	 var dataToStore = JSON.stringify(timeline_data);
+	 localStorage.setItem('eventData', dataToStore);
+
+	 var tl;
+	 var eventSource1 = new Timeline.DefaultEventSource();
+	 function onLoad() {
+	 	var bandInfos = [
+	 		Timeline.createBandInfo({
+	 			width:  		"10%", 	
+	 			intervalUnit: Timeline.DateTime.DAY,
+	 			intervalPixels: 40 ,
+	 			overview: 		true, 
+	 			eventSource: 	eventSource1
+	 		}),
+	 		Timeline.createBandInfo({
+	 			width: 			"70%",
+	 			intervalUnit: 	Timeline.DateTime.WEEK,
+	 			intervalPixels: 280  ,
+	 			eventSource: 	eventSource1 
+	 		}),
+	 		Timeline.createBandInfo({
+	 			width:  		"20%", 	
+	 			intervalUnit: Timeline.DateTime.MONTH,
+	 			intervalPixels: 200 ,
+	 			overview: 		true, 
+	 			eventSource: 	eventSource1
+	 		})
+	 	];
+	 	bandInfos[1].syncWith = 0;
+	 	bandInfos[1].highlight = true;
+	 	bandInfos[2].syncWith = 1;
+
+	 	SimileAjax.History.enabled = false;
+	 	tl = Timeline.create(document.getElementById("my-timeline"), bandInfos);
+
+	 	var url = '.';
+		var dataFromStore = JSON.parse(localStorage.getItem('eventData'));
+	 	eventSource1.loadJSON(dataFromStore, url);
+	 	tl.layout();
+	 }
+
+	 var resizeTimerID = null;
+	 function onResize(){
+	 	if (resizeTimerID == null) {
+	 		resizeTimerID = window.setTimeout(function() {
+	 			resizeTimerID = null;
+	 			tl.layout();
+	 		}, 500);
+	 	}
+	 }
+
+	 var editor;
+
+	 $(document).ready(function() {
+	 	editor = new $.fn.dataTable.Editor({
+	 		table: "#datatbl",
+	 		fields: [{
+	 			label: "Title:",
+	 			name: "title"
+	 		}, {
+	 			label: "Description:",
+	 			name: "description"
+	 		}, {
+	 			label: "Start:",
+	 			name: "start"
+	 		}, {
+	 			label: "End:",
+	 			name: "end"
+	 		}]
+	 	});
+	 });
+	 </script>
+   </head>
+   <body onload="onLoad();" onresize="onResize();">
+   		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+   		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<h1>The Timeline</h1>
+
+   		<div id="my-timeline" style="height: 300px; border: 1px solid #aaa"></div>
+   		<form class="form-horizontal">
+   			<div class="row">
+   				<div class="col-xs-2">
+   					<input id="title1" type="text" class="form-control" placeholder="Title">
+   				</div>
+   				<div class="input-group date form_datetime col-xs-2" data-date="2014-06-08T05:30:00Z" data-date-format="DD/MM/YYYY HH:mm" data-link-field="start1" id="start1">
+   					<input type="text" readonly size="16" class="form-control"  ><span class="input-group-addon"><span class=" glyphicon glyphicon-th"></span></span>
+   				</div>
+   				<button id="update" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-save"></span> Update </button>
+   			</div>
+   		</form>
+
+   		<div class="panel pane-default">
+   			<div class="panel-body">
+   				<form id="datatable" class="form-horizontal">
+   					<button id="updatebtn" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-save"></span> Update </button>
+   				</form>
+   			</div>
+   		</div>
+
+   		<div class="pane pane-default">
+   			<div class="panel-body">
+   				<table id="datatbl" class="display" cellspacing="0" width="100%">
+   					<thead>
+   						<tr>
+   							<th></th>
+   							<th>Title</th>
+   							<th>Description</th>
+   							<th>Start</th>
+   							<th>End</th>
+   						</tr>
+   					</thead>
+   				</table>
+   			</div>
+   		</div>
+   		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+   		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.0.0/js/bootstrap-datetimepicker.min.js"></script>
+   		<script type="text/javascript">
+   		$('.form_datetime').datetimepicker({
+   			autoclose: 1,
+   			todayHighlight: 1,
+   			startView: 2,
+   			forceParse: 0,
+   			showMeridiean: 1
+   		});
+
+   		var dataFromStore = JSON.parse(localStorage.getItem('eventData'));
+
+   		$('#title1').val(dataFromStore.events[0].title);
+		$('#start1').data("DateTimePicker").setDate(dataFromStore.events[0].start);
+
+		$.each(dataFromStore.events, function(index, value){
+			value.index = index;
+			//$("tbody").append(nano("<tr><div class='controls-row'><td>{index}</td><td><input id='title{index}' type='text' class='form-control input-small' placeholder='Title' value='{title}' size=16></td><td><div id='start_{index}' class='input-group date form_datetime input-small' data-date-format='DD/MM/YYYY hh:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div></td><td><div id='end_{index}' class='input-group date form_datetime input-small' data-date-format='DD/MM/YYYY hh:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div></td><td><input id='description{index}' type='text' class='form-control' placeholder='Description' value='{description}' size=16></td></div></tr>", value));
+			$("#datatable").append(nano("<div class='row'><div class='col-xs-2'><input id='title_{index}' type='text' class='form-control' placeholder='Title' value='{title}'/></div><div class='col-xs-2'><input id='description{index}' type='text' class='form-control' placeholder='Description' value='{description}'/></div><div id='start_{index}' class='input-group date form_datetime col-xs-2' data-date-format='DD/MM/YYYY HH:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div><div id='end_{index}' class='input-group date form_datetime col-xs-2' data-date-format='DD/MM/YYYY HH:mm'><input type='text' readonly class='form-control'><span class='input-group-addon'><span class='glyphicon glyphicon-th'></span></span></div></div>", value));			
+			$('.form_datetime').datetimepicker();
+			$('#start_'+index).data("DateTimePicker").setDate(value.start);
+			$('#end_'+index).data("DateTimePicker").setDate(value.end);
+		});
+
+		$('#update').click(function(){
+			var title = $('#title1').val();
+			var start = $('#start1').data("DateTimePicker").getDate();
+			var event_data = {
+	 			'events' : [
+	 				{
+			 			'start': start,
+			 			'end': new Date(2014, 6, 9),
+			 			'title': title,
+			 			'description': ''
+			 		},
+			 		{
+			 			'start': new Date(2014, 6, 10),
+			 			'end': new Date(2014, 6, 15),
+			 			'title': 'Event 2',
+			 			'description': ''	 			
+			 		}
+			 	]
+	 		}
+
+	 		var dataToStore = JSON.stringify(event_data);
+	 		localStorage.setItem('eventData', dataToStore);
+		 	var url = '.';
+			var dataFromStore = JSON.parse(localStorage.getItem('eventData'));
+			eventSource1.clear();
+		 	eventSource1.loadJSON(dataFromStore, url);
+		 	tl.layout();
+
+		});
+   		</script>
+   </body>
+ </html>
